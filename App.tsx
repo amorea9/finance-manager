@@ -1,14 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import Category from "./category/Category";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Welcome to the finance manager app!</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.text}>Welcome to the finance manager app!</Text>
       <StatusBar style="auto" />
       <Category />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -18,6 +18,11 @@ const styles = StyleSheet.create({
     gap: 20,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-around",
+  },
+  text: {
+    fontSize: 30,
+    marginTop: 70,
+    textAlign: "center",
   },
 });

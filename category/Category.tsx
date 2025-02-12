@@ -11,6 +11,7 @@ export default function Category() {
     const newCategory = new categoryType(categoriesList.length, category);
     setCategoriesList([...categoriesList, newCategory]);
     setCategory("");
+
     console.log(categoriesList);
   };
   const removeCategory = (item: categoryType) => {
@@ -19,26 +20,27 @@ export default function Category() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Create a new category:</Text>
       <TextInput style={styles.input} onChangeText={setCategory} value={category} placeholder="Enter a category name" />
 
       <TouchableOpacity onPress={addCategory} accessibilityLabel="Create a category" style={styles.button}>
         <Text style={styles.text}>Create</Text>
       </TouchableOpacity>
+      <SafeAreaView>
+        <Text style={styles.text}>Added categories: </Text>
 
-      <Text style={styles.text}>Added categories: </Text>
-
-      <FlatList
-        data={categoriesList}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => removeCategory(item)}>
-            <CategoryItem title={item.title} />
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
-    </View>
+        <FlatList
+          data={categoriesList}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => removeCategory(item)}>
+              <CategoryItem title={item.title} />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </SafeAreaView>
+    </SafeAreaView>
   );
 }
 
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
     gap: 20,
     width: 300,
     height: 500,
-    marginTop: 200,
+    marginTop: 70,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "space-between",
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     padding: 25,
     paddingTop: 10,
     paddingBottom: 10,
-    marginBottom: 50,
+    marginBottom: 20,
     height: "auto",
     width: 180,
     borderWidth: 1,
