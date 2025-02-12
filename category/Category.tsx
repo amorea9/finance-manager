@@ -7,24 +7,81 @@ export default function Category() {
   const [category, setCategory] = React.useState("");
   const [categoriesList, setCategoriesList] = React.useState([] as categoryType[]);
 
-  const addCategory = () => {
+  const createCategory = async () => {
+    try {
+      const response = await fetch("http://192.168.111.5:3000/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: category }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const createdCategory = await response.json();
+      addCategoryUI();
+      return createdCategory;
+    } catch (error) {
+      console.error("Error creating category:", error);
+    }
+  };
+
+  const getCategories = async () => {
+    try {
+      const response = await fetch("http://192.168.111.5:3000/categories", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategoriesList(data);
+    } catch (error) {
+      console.error("Error retrieving categories:", error);
+    }
+  };
+  getCategories();
+
+  const addCategoryUI = () => {
     const newCategory = new categoryType(categoriesList.length, category);
     setCategoriesList([...categoriesList, newCategory]);
     setCategory("");
-
     console.log(categoriesList);
   };
-  const removeCategory = (item: categoryType) => {
-    const itemId = item.id;
-    setCategoriesList(categoriesList.filter((item) => item.id !== itemId));
+
+  const removeCategory = async (id: number) => {
+    try {
+      const response = await fetch(`http://192.168.111.5:3000/categories/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const deletedCategory = await response.json();
+      await getCategories();
+      console.log("Category deleted", deletedCategory);
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
   };
+
+  // const removeCategoryUI = (id: number) => {
+  //   setCategoriesList(categoriesList.filter((item) => item.id !== id));
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Create a new category:</Text>
       <TextInput style={styles.input} onChangeText={setCategory} value={category} placeholder="Enter a category name" />
 
-      <TouchableOpacity onPress={addCategory} accessibilityLabel="Create a category" style={styles.button}>
+      <TouchableOpacity onPress={createCategory} accessibilityLabel="Create a category" style={styles.button}>
         <Text style={styles.text}>Create</Text>
       </TouchableOpacity>
       <SafeAreaView>
@@ -33,7 +90,7 @@ export default function Category() {
         <FlatList
           data={categoriesList}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => removeCategory(item)}>
+            <TouchableOpacity onPress={() => removeCategory(item.id)}>
               <CategoryItem title={item.title} />
             </TouchableOpacity>
           )}
