@@ -1,7 +1,9 @@
-import { View, Text, TextInput, StyleSheet, Button, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
 import { categoryType } from "./CategoryType";
 import CategoryItem from "./CategoryItem";
+import { Input, InputField } from "@/components/ui/input";
+import { Box } from "@/components/ui/box";
 
 export default function Category() {
   const [category, setCategory] = React.useState("");
@@ -72,68 +74,83 @@ export default function Category() {
     }
   };
 
-  // const removeCategoryUI = (id: number) => {
-  //   setCategoriesList(categoriesList.filter((item) => item.id !== id));
-  // };
-
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Create a new category:</Text>
-      <TextInput style={styles.input} onChangeText={setCategory} value={category} placeholder="Enter a category name" />
+      {/* <TextInput style={styles.input} onChangeText={setCategory} value={category} placeholder="Enter a category name" /> */}
 
-      <TouchableOpacity onPress={createCategory} accessibilityLabel="Create a category" style={styles.button}>
-        <Text style={styles.text}>Create</Text>
-      </TouchableOpacity>
-      <SafeAreaView>
-        <Text style={styles.text}>Added categories: </Text>
+      <Box className="flex gap-10 items-center bg-orange-100 w-screen pt-8 pb-6">
+        <Text style={styles.text} className="text-orange-500">
+          Create a new category:
+        </Text>
+        <Box style={styles.input}>
+          <Input isDisabled={false} isInvalid={false} isReadOnly={false}>
+            <InputField placeholder="Enter a category name" type="text" value={category} onChangeText={setCategory} style={{ fontSize: 18 }} />
+          </Input>
+        </Box>
 
-        <FlatList
-          data={categoriesList}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => removeCategory(item.id)}>
-              <CategoryItem title={item.title} />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      </SafeAreaView>
+        <TouchableOpacity onPress={createCategory} accessibilityLabel="Create a category" style={styles.button}>
+          <Text className="text-xl text-white font-bold">Create</Text>
+        </TouchableOpacity>
+      </Box>
+
+      <Box className="flex gap-10 items-center bg-orange-100 w-screen pt-8 pb-6">
+        <SafeAreaView className="flex gap-4 w-auto">
+          <Text style={styles.text} className="text-orange-500">
+            Added categories:
+          </Text>
+
+          <FlatList
+            data={categoriesList}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => removeCategory(item.id)}>
+                <CategoryItem title={item.title} />
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </SafeAreaView>
+      </Box>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   input: {
-    height: 50,
-    width: 200,
-    margin: 12,
+    height: 60,
+    width: 300,
+    margin: "auto",
     borderWidth: 1,
-    padding: 10,
+    borderColor: "lightgrey",
+    justifyContent: "center",
+    borderRadius: 4,
+    backgroundColor: "white",
   },
   text: {
-    fontSize: 20,
-    fontWeight: "semibold",
+    fontSize: 25,
+    fontWeight: "bold",
   },
   container: {
     flex: 1,
-    gap: 20,
-    width: 300,
-    height: 500,
-    marginTop: 70,
+    gap: 10,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#f8e869",
+    backgroundColor: "#f86669",
     padding: 25,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 12,
+    paddingBottom: 12,
     marginBottom: 20,
     height: "auto",
-    width: 180,
+    width: 200,
     borderWidth: 1,
     borderColor: "transparent",
-    borderRadius: 4,
+    borderRadius: 8,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
 });
